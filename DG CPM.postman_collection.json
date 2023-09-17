@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "e2e2a8bf-1579-4d2a-a104-716bcff64f64",
+		"name": "DG CPM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "12889479",
+		"_collection_link": "https://sertemoz.postman.co/workspace/Data-Guard-Customer~5b6835c6-5fbf-47eb-af65-2c1635b4cec7/collection/12889479-e2e2a8bf-1579-4d2a-a104-716bcff64f64?action=share&source=collection_link&creator=12889479"
+	},
+	"item": [
+		{
+			"name": "auth0",
+			"item": [
+				{
+					"name": "Get DG CPM JWT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is OK\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"postman.setGlobalVariable(\"dg-cpm-token\", JSON.parse(responseBody).access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"client_id\": \"{{auth0-client-id}}\",\n\t\"client_secret\": \"{{auth0-client-secret}}\", \n\t\"audience\": \"{{api-audience}}\", \n\t\"grant_type\": \"client_credentials\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{auth0-domain}}/oauth/token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "consentstate",
+			"item": [
+				{
+					"name": "Get Consent State",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{dg-cpm-token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api-host}}/v1/consent-state?applicationId={{app-id}}&templateId=&externalRef=",
+							"host": [
+								"{{api-host}}"
+							],
+							"path": [
+								"",
+								"v1",
+								"consent-state"
+							],
+							"query": [
+								{
+									"key": "applicationId",
+									"value": "{{app-id}}"
+								},
+								{
+									"key": "templateId",
+									"value": ""
+								},
+								{
+									"key": "externalRef",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Consent State",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{dg-cpm-token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"applicationId\": {{app-id}},\n  \"externalRef\": \"jb-mld-05\",\n  \"blocks\": [\n    {\n      \"type\": \"multi-choice-preference\",\n      \"reference\": \"interests\",\n      \"choices\": [\n        {\n          \"reference\": \"interests_jazz\",\n          \"selected\": true\n        }\n      ]\n    },\n    {\n      \"type\": \"permissions\",\n      \"statement\": {\n        \"reference\": \"permission-statement-ref-01\"\n      },\n      \"options\": [\n        {\n          \"optionId\": \"f8Hba\",\n          \"optionType\": \"option\",\n          \"justification\": \"consent\",\n          \"selected\": true\n        }\n      ]\n    },\n    {\n      \"type\": \"single-choice-preference\",\n      \"reference\": \"interests\",\n      \"selectedChoice\": \"interests_jazz\",\n      \"choices\": [\n        {\n          \"reference\": \"interests_jazz\"\n        }\n      ]\n    },\n    {\n      \"type\": \"text\"\n    }\n  ],\n  \"privacyPolicy\": {\n    \"reference\": \"policy-ref-01\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{api-host}}/v1/consent-state"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
