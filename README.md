@@ -4,8 +4,8 @@ This [readme document](https://mylifedigital.readme.io/docs/postman-collections)
 
 ## Installing
 
-1. Import the collections in the collections directory
-2. Import the environments in the environments directory
+1. Import the collections in the collections directory.
+2. Import the environments in the environments directory.
 3. Set the environment variables like client id, client secret and the value of `app-id` to any appId you want to use based on environment
 
 ## Usage
